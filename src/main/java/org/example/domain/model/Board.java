@@ -9,7 +9,6 @@ public class Board {
     }
 
     public Board() {
-
     }
 
     public int[][] getField() {
@@ -26,5 +25,8 @@ public class Board {
 
     public void reset() {
         this.field = new int[3][3];
+    }
+
+    public void setField(int[][] field) {
     }
 }

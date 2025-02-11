@@ -28,4 +28,13 @@ public class Game {
     public void switchPlayer() {
         currentPlayer = (currentPlayer == 1) ? 2 : 1;
     }
+
+    public void setCurrentPlayer(int currentPlayer) {
+    }
+
+    public void setBoard(Board domain) {
+    }
+
+    public void setId(String id) {
+    }
 }

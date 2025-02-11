@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class GameEntity {
     private final String id;
-    private final BoardEntity board;
+    private BoardEntity board;
     private int currentPlayer;
 
     public GameEntity() {
@@ -19,6 +19,10 @@ public class GameEntity {
 
     public BoardEntity getBoard() {
         return board;
+    }
+
+    public void setBoard(BoardEntity board) { // Добавьте этот метод
+        this.board = board;
     }
 
     public int getCurrentPlayer() {
