@@ -4,11 +4,12 @@ public class Board {
 
     private int[][] field;
 
-    public Board(int row, int col){
-        this.field = new int[3][3];
-    }
+//    public Board(int row, int col){
+//        this.field = new int[3][3];
+//    }
 
     public Board() {
+        this.field = new int[3][3];
     }
 
     public int[][] getField() {

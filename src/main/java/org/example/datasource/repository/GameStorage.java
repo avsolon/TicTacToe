@@ -9,7 +9,7 @@ public class GameStorage {
     private final Map<String, GameEntity> games = new ConcurrentHashMap<>();
 
     public void saveGame(GameEntity game) {
-        games.put(game.getId(), game);
+        games.put(game.getGameId(), game);
     }
 
     public GameEntity getGame(String gameId) {

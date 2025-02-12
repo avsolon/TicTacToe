@@ -1,17 +1,11 @@
 package org.example;
 
-import org.example.datasource.repository.GameRepository;
-import org.example.datasource.repository.GameRepositoryImpl;
-import org.example.datasource.repository.GameStorage;
-import org.example.domain.service.GameService;
-import org.example.domain.service.GameServiceImpl;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        GameStorage gameStorage = new GameStorage();
-        GameRepository gameRepository = new GameRepositoryImpl(gameStorage);
-        GameService gameService = new GameServiceImpl(gameRepository);
-
-        // ...
+        SpringApplication.run(Main.class, args);
     }
 }
