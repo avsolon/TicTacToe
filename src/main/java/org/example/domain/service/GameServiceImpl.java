@@ -1,10 +1,14 @@
 package org.example.domain.service;
 
+import org.example.datasource.mapper.BoardMapper;
 import org.example.datasource.mapper.GameMapper;
 import org.example.datasource.model.GameEntity;
 import org.example.datasource.repository.GameRepository;
 import org.example.domain.model.Game;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class GameServiceImpl implements GameService{
 
     private final GameRepository gameRepository;
@@ -133,15 +137,37 @@ public class GameServiceImpl implements GameService{
         return false;
     }
 
+
+
     @Override
+    @Transactional
     public void saveGame(Game game) {
-        GameEntity entity = GameMapper.toEntity(game);
-        gameRepository.save(entity);
+        GameEntity existingEntity = gameRepository.findByGameId(game.getId());
+        if (existingEntity != null) {
+            // Обновляем существующую запись
+            existingEntity.setBoard(BoardMapper.toEntity(game.getBoard()));
+            existingEntity.setCurrentPlayer(game.getCurrentPlayer());
+            gameRepository.save(existingEntity);
+        } else {
+            // Создаем новую запись
+            GameEntity entity = GameMapper.toEntity(game);
+            gameRepository.save(entity);
+        }
     }
+
+//    @Override
+//    public void saveGame(Game game) {
+//        GameEntity entity = GameMapper.toEntity(game);
+//        System.out.println("Сохраняем игру с ID: " + entity.getGameId()); // Логирование ID
+//        gameRepository.save(entity);
+//    }
 
     @Override
     public Game getGame(String gameId) {
         GameEntity entity = gameRepository.findByGameId(gameId);
+        if (entity == null) {
+            return null; // Возвращаем null, если игра не найдена
+        }
         return GameMapper.toDomain(entity);
     }
 }

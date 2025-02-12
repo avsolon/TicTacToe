@@ -7,8 +7,9 @@ import java.util.UUID;
 public class GameEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id; // Используйте Long или UUID в зависимости от ваших предпочтений
+    private Long id;
 
+    @Column(unique = true)
     private String gameId; // UUID игры
     @Embedded
     private BoardEntity board;
@@ -22,6 +23,10 @@ public class GameEntity {
 
     public String getGameId() {
         return gameId;
+    }
+
+    public void setGameId(String gameId){
+        this.gameId = gameId;
     }
 
     public BoardEntity getBoard() {
@@ -40,6 +45,11 @@ public class GameEntity {
         this.currentPlayer = currentPlayer;
     }
 }
+
+
+
+
+
 //public class GameEntity {
 //    private final String id;
 //    private BoardEntity board;

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class Game {
     private String id; // UUID игры
-    private final Board board;
+    private Board board;
     private int currentPlayer; // 1 - крестик, 2 - нолик
 
     public Game() {
@@ -30,11 +30,14 @@ public class Game {
     }
 
     public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public void setBoard(Board domain) {
+        this.board = domain;
     }
 
     public void setId(String id) {
+        this.id = id;
     }
 }
