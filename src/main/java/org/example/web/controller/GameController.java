@@ -39,6 +39,7 @@ public class GameController {
         return ResponseEntity.ok(GameMapper.toDTO(game));
     }
 
+
     @PostMapping("/{id}")
     public ResponseEntity<GameDTO> updateGame(@PathVariable String id, @RequestBody GameDTO gameDTO) {
         Game game = gameService.getGame(id);
@@ -58,19 +59,54 @@ public class GameController {
             // Обновление игрового поля
             game.setBoard(BoardMapper.toDomain(gameDTO.getBoard())); // Обновляем поле
 
+
+
             // Проверка, заполнено ли поле
             if (gameService.isBoardFull(game)) {
                 // Если поле заполнено, можно вернуть статус или выполнить другую логику
                 System.out.println("Поле заполнено.");
+                return ResponseEntity.ok(GameMapper.toDTO(game));
             }
 
             // Переключить игрока
             game.switchPlayer();
 
+            // Ход компьютера (игрока 2)
+            if (game.getCurrentPlayer() == 2) {
+                int[] nextMove = gameService.getNextMove(game);
+                if (nextMove[0] != -1 && nextMove[1] != -1) {
+                    game.getBoard().setCell(nextMove[0], nextMove[1], 2); // Устанавливаем ход компьютера
+                    System.out.println("Компьютер сделал ход в ячейку: " + nextMove[0] + ", " + nextMove[1]);
+                    game.switchPlayer();
+                }
+            }
+
             // Сохранить обновленное состояние игры
             gameService.saveGame(game);
 
+
+
+            if (gameService.isWinner(game, 1)) {
+                System.out.println("Победа игрока 1.");
+                return ResponseEntity.ok(GameMapper.toDTO(game));
+
+                //return -1; // Игрок 1 выиграл
+            }
+            if (gameService.isWinner(game, 2)) {
+                System.out.println("Победа игрока 2.");
+                return ResponseEntity.ok(GameMapper.toDTO(game));
+                //return 1; // Игрок 2 выиграл
+            }
+            if (gameService.isBoardFull(game)) {
+                System.out.println("Ничья");
+                return ResponseEntity.ok(GameMapper.toDTO(game));
+                //return 0; // Ничья
+            }
+
+
             return ResponseEntity.ok(GameMapper.toDTO(game));
+
+
         } catch (IllegalArgumentException e) {
             System.out.println("Ошибка при обновлении игры: " + e.getMessage());
             return ResponseEntity.badRequest().body(null);
@@ -79,36 +115,6 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
-//    @PostMapping("/{id}")
-//    public ResponseEntity<GameDTO> updateGame(@PathVariable String id, @RequestBody GameDTO gameDTO) {
-//        Game game = gameService.getGame(id);
-//        if (game == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        }
-//
-//        // Обновление состояния игры на основе данных из gameDTO
-//        try {
-//            // Здесь должна быть логика валидации и обновления игрового поля
-//            // Например, проверка, что текущий ход соответствует состоянию поля
-//            if (!gameService.isBoardFull(game)) {
-//                return ResponseEntity.badRequest().body(null);
-//            }
-//
-//            // Обновление игрового поля
-//            // game.getBoard().setCell(...); // Установить новое состояние на основе gameDTO
-//
-//            // Переключить игрока
-//            game.switchPlayer();
-//
-//            // Сохранить обновленное состояние игры
-//            gameService.saveGame(game);
-//
-//            return ResponseEntity.ok(GameMapper.toDTO(game));
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//    }
 
 
 

@@ -49,10 +49,10 @@ public class GameServiceImpl implements GameService{
     private int minimax(Game game, boolean isMaximizing) {
         // Проверка на окончание игры
         if (isWinner(game, 1)) {
-            return -1; // Игрок 1 (нолики) выиграл
+            return -1; // Игрок 1 выиграл
         }
         if (isWinner(game, 2)) {
-            return 1; // Игрок 2 (крестики) выиграл
+            return 1; // Игрок 2 выиграл
         }
         if (isBoardFull(game)) {
             return 0; // Ничья
@@ -137,8 +137,6 @@ public class GameServiceImpl implements GameService{
         return false;
     }
 
-
-
     @Override
     @Transactional
     public void saveGame(Game game) {
@@ -151,16 +149,10 @@ public class GameServiceImpl implements GameService{
         } else {
             // Создаем новую запись
             GameEntity entity = GameMapper.toEntity(game);
+            System.out.println("Сохраняем игру с ID: " + entity.getGameId());
             gameRepository.save(entity);
         }
     }
-
-//    @Override
-//    public void saveGame(Game game) {
-//        GameEntity entity = GameMapper.toEntity(game);
-//        System.out.println("Сохраняем игру с ID: " + entity.getGameId()); // Логирование ID
-//        gameRepository.save(entity);
-//    }
 
     @Override
     public Game getGame(String gameId) {
