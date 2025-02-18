@@ -5,11 +5,12 @@ import org.example.datasource.mapper.GameMapper;
 import org.example.datasource.model.GameEntity;
 import org.example.datasource.repository.GameRepository;
 import org.example.domain.model.Game;
+import org.example.web.model.GameDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GameServiceImpl implements GameService{
+public class GameServiceImpl implements GameService {
 
     private final GameRepository gameRepository;
 
@@ -99,6 +100,56 @@ public class GameServiceImpl implements GameService{
         }
     }
 
+
+    @Override
+    public boolean isValidMove(Game game, GameDTO gameDTO) {
+        int[][] currentField = game.getBoard().getField(); // Текущее состояние
+        int[][] newField = gameDTO.getBoard().getField(); // Новое состояние
+
+
+
+        for (int row = 0; row < newField.length; row++) {
+            for (int col = 0; col < newField.length; col++) {
+                if (newField[row][col] != currentField[row][col]) {
+                    if (newField[row][col] != 0) {
+                        if (currentField[row][col] != 0) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (currentField[row][col] != 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true; // Все ходы валидны
+    }
+
+//    @Override
+//    public boolean isValidMove(Game game, GameDTO gameDTO) {
+//        int[][] currentField = game.getBoard().getField(); // Текущее состояние
+//        int[][] newField = gameDTO.getBoard().getField(); // Новое состояние
+//
+//        for (int row = 0; row < 3; row++) {
+//            for (int col = 0; col < 3; col++) {
+//                // Проверяем, если новое состояние отличается от текущего
+//                if (newField[row][col] != currentField[row][col]) {
+//                    // Если новое значение не равно 0, значит, это ход
+//                    if (newField[row][col] != 0) {
+//                        // Проверяем, что текущее состояние в этой ячейке было 0
+//                        if (currentField[row][col] != 0) {
+//                            return false; // Если ячейка уже занята, возвращаем false
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return true; // Все ходы валидны
+//    }
+
     @Override
     public boolean isBoardFull(Game game) {
         int[][] field = game.getBoard().getField();
@@ -135,6 +186,11 @@ public class GameServiceImpl implements GameService{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isGameOver(Game game) {
+        return isWinner(game, 1) || isWinner(game, 2) || isBoardFull(game);
     }
 
     @Override

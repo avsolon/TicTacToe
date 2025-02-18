@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Крестики-Нолики</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+        .cell:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+<div id="board"></div>
+<script>
+    const board = document.getElementById('board');
+    const cells = Array(9).fill(null);
+    let currentPlayer = 1; // 1 - игрок, 2 - компьютер
+    let gameId = null;
+
+    // Создание новой игры
+    async function createGame() {
+        const response = await fetch('/api/games', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const game = await response.json();
+        gameId = game.id; // Сохраняем ID игры
+        console.log('Игра создана с ID:', gameId);
+    }
+
+    // Получение состояния игры
+    async function getGame() {
+        const response = await fetch(`/api/games/${gameId}`);
+        return await response.json();
+    }
+
+    // Обновление состояния игры
+    async function updateGame() {
+        const gameDTO = {
+            currentPlayer: currentPlayer,
+            board: {
+                cells: cells
+            }
+        };
+
+        const response = await fetch(`/api/games/${gameId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(gameDTO)
+        });
+
+        return await response.json();
+    }
+
+    function createBoard() {
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.dataset.index = i;
+            cell.addEventListener('click', handleCellClick);
+            board.appendChild(cell);
+        }
+    }
+
+    async function handleCellClick(event) {
+        const index = event.target.dataset.index;
+        if (cells[index] || currentPlayer !== 1) return;
+
+        cells[index] = currentPlayer;
+        event.target.textContent = currentPlayer === 1 ? 'X' : 'O';
+
+        const gameState = await updateGame();
+        if (gameState) {
+            if (gameState.winner) {
+                alert(`Победа игрока ${gameState.winner}!`);
+                return;
+            }
+            // Обновляем состояние доски после хода компьютера
+            cells.forEach((cell, i) => {
+                board.children[i].textContent = cell === 1 ? 'X' : (cell === 2 ? 'O' : '');
+            });
+        }
+    }
+
+    createBoard();
+    createGame(); // Создаем новую игру при загрузке страницы
+</script>
+</body>
+</html>

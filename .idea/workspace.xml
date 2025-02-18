@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ad46a03-c25c-4941-8679-10198a23d758" name="Changes" comment="v2.1">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/domain/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/domain/service/GameService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/domain/service/GameServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/domain/service/GameServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/web/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/web/controller/GameController.java" afterDir="false" />
     </list>
@@ -208,6 +209,8 @@
       <workItem from="1739606904876" duration="32000" />
       <workItem from="1739613943324" duration="19000" />
       <workItem from="1739771571532" duration="4691000" />
+      <workItem from="1739798231030" duration="7894000" />
+      <workItem from="1739860226901" duration="1496000" />
     </task>
     <task id="LOCAL-00001" summary="v1.0">
       <option name="closed" value="true" />

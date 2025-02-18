@@ -44,6 +44,7 @@ public class GameController {
     public ResponseEntity<GameDTO> updateGame(@PathVariable String id, @RequestBody GameDTO gameDTO) {
         Game game = gameService.getGame(id);
         if (game == null) {
+            System.out.println("Несуществующая игра");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
@@ -53,17 +54,21 @@ public class GameController {
         try {
             // Проверка, что текущий игрок соответствует ожидаемому значению
             if (game.getCurrentPlayer() != gameDTO.getCurrentPlayer()) {
+                System.out.println("Неверный игрок");
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            // Проверка на валидность хода
+            if (!gameService.isValidMove(game, gameDTO)) {
+                System.out.println("Невалидный ход");
                 return ResponseEntity.badRequest().body(null);
             }
 
             // Обновление игрового поля
-            game.setBoard(BoardMapper.toDomain(gameDTO.getBoard())); // Обновляем поле
-
-
+            game.setBoard(BoardMapper.toDomain(gameDTO.getBoard()));
 
             // Проверка, заполнено ли поле
             if (gameService.isBoardFull(game)) {
-                // Если поле заполнено, можно вернуть статус или выполнить другую логику
                 System.out.println("Поле заполнено.");
                 return ResponseEntity.ok(GameMapper.toDTO(game));
             }
@@ -75,37 +80,32 @@ public class GameController {
             if (game.getCurrentPlayer() == 2) {
                 int[] nextMove = gameService.getNextMove(game);
                 if (nextMove[0] != -1 && nextMove[1] != -1) {
-                    game.getBoard().setCell(nextMove[0], nextMove[1], 2); // Устанавливаем ход компьютера
+                    game.getBoard().setCell(nextMove[0], nextMove[1], 2);
                     System.out.println("Компьютер сделал ход в ячейку: " + nextMove[0] + ", " + nextMove[1]);
                     game.switchPlayer();
                 }
             }
 
+            // Логирование состояния игры перед сохранением
+            System.out.println("Состояние игры перед сохранением: " + game);
+
             // Сохранить обновленное состояние игры
             gameService.saveGame(game);
 
-
-
             if (gameService.isWinner(game, 1)) {
-                System.out.println("Победа игрока 1.");
-                return ResponseEntity.ok(GameMapper.toDTO(game));
-
-                //return -1; // Игрок 1 выиграл
+                System.out.println("Победа игрока 1!");
             }
             if (gameService.isWinner(game, 2)) {
-                System.out.println("Победа игрока 2.");
-                return ResponseEntity.ok(GameMapper.toDTO(game));
-                //return 1; // Игрок 2 выиграл
-            }
-            if (gameService.isBoardFull(game)) {
-                System.out.println("Ничья");
-                return ResponseEntity.ok(GameMapper.toDTO(game));
-                //return 0; // Ничья
+                System.out.println("Победа игрока 2!");
             }
 
+            // Проверка, закончилась ли игра
+            if (gameService.isGameOver(game)) {
+                System.out.println("Игра завершена!");
+                return ResponseEntity.ok(GameMapper.toDTO(game));
+            }
 
             return ResponseEntity.ok(GameMapper.toDTO(game));
-
 
         } catch (IllegalArgumentException e) {
             System.out.println("Ошибка при обновлении игры: " + e.getMessage());
