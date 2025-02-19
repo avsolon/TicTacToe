@@ -9,7 +9,6 @@ public class BoardMapper {
         dto.setField(board.getField());
         return dto;
     }
-
     public static Board toDomain(BoardDTO dto) {
         Board board = new Board();
         board.setField(dto.getField());

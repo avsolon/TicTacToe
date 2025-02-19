@@ -7,7 +7,7 @@ public class BoardEntity {
     private int[] field;
 
     public BoardEntity() {
-        this.field = new int[9]; // Плоский массив 3x3
+        this.field = new int[9]; // массив 3x3
     }
 
     public int[][] getField() {
@@ -25,23 +25,6 @@ public class BoardEntity {
     }
 }
 
-
-//public class BoardEntity {
-//    private int[][] field;
-//
-//    public BoardEntity() {
-//        this.field = new int[3][3];
-//    }
-//
-//    public int[][] getField() {
-//        return field;
-//    }
-//
-//    public void setField(int[][] field) {
-//        this.field = field;
-//    }
-//
-//}
 
 
 

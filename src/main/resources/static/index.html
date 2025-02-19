@@ -14,13 +14,13 @@
         }
         #board {
             display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-template-rows: repeat(3, 100px);
+            grid-template-columns: repeat(3, 200px);
+            grid-template-rows: repeat(3, 200px);
             gap: 5px;
         }
         .cell {
-            width: 100px;
-            height: 100px;
+            width: 200px;
+            height: 200px;
             background-color: white;
             display: flex;
             justify-content: center;
@@ -32,14 +32,34 @@
         .cell:hover {
             background-color: #e0e0e0;
         }
+        .cell.disabled {
+            pointer-events: none;
+            opacity: 0.5; /* Полупрозрачность */
+        }
     </style>
 </head>
 <body>
-<div id="board"></div>
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <h1>Крестики-нолики</h1>
+    <div style="display: flex; align-items: center;">
+        <img src="images/human.png" style="width: 500px; height: auto; margin-right: 100px;">
+        <div id="board"></div>
+        <img src="images/ai.png" style="width: 500px; height: auto; margin-left: 100px;">
+    </div>
+    <div id="winner-message" style="display: none; font-size: 1.5em; margin-top: 20px;"></div>
+    <button onclick="reloadPage()" style="margin-top: 20px;">Начать новую игру</button>
+</div>
+
+<script>
+    function reloadPage() {
+        location.reload(); // Перезагружает страницу
+    }
+</script>
+
 <script>
     const board = document.getElementById('board');
     const cells = Array(9).fill(null);
-    let currentPlayer = 1; // 1 - игрок, 2 - компьютер
+    let currentPlayer = 1;
     let gameId = null;
 
     // Создание новой игры
@@ -51,14 +71,8 @@
             }
         });
         const game = await response.json();
-        gameId = game.id; // Сохраняем ID игры
+        gameId = game.id;
         console.log('Игра создана с ID:', gameId);
-    }
-
-    // Получение состояния игры
-    async function getGame() {
-        const response = await fetch(`/api/games/${gameId}`);
-        return await response.json();
     }
 
     // Обновление состояния игры
@@ -66,7 +80,11 @@
         const gameDTO = {
             currentPlayer: currentPlayer,
             board: {
-                cells: cells
+                field: [
+                    [cells[0] || 0, cells[1] || 0, cells[2] || 0],
+                    [cells[3] || 0, cells[4] || 0, cells[5] || 0],
+                    [cells[6] || 0, cells[7] || 0, cells[8] || 0]
+                ]
             }
         };
 
@@ -93,26 +111,73 @@
 
     async function handleCellClick(event) {
         const index = event.target.dataset.index;
+
         if (cells[index] || currentPlayer !== 1) return;
 
         cells[index] = currentPlayer;
-        event.target.textContent = currentPlayer === 1 ? 'X' : 'O';
+        event.target.textContent = 'X';
 
+        // Отправляем ход на сервер и получаем новое состояние игры
         const gameState = await updateGame();
-        if (gameState) {
-            if (gameState.winner) {
-                alert(`Победа игрока ${gameState.winner}!`);
-                return;
-            }
-            // Обновляем состояние доски после хода компьютера
-            cells.forEach((cell, i) => {
-                board.children[i].textContent = cell === 1 ? 'X' : (cell === 2 ? 'O' : '');
-            });
+        console.log('Состояние игры после хода игрока:', gameState);
+
+        // Обновляем визуальное представление доски
+        updateBoard(gameState.board.field);
+
+        // Проверяем, завершился ли игровой раунд
+        if (gameState.winner) {
+            // Отображаем сообщение о победе
+            const winnerMessage = document.getElementById('winner-message');
+            winnerMessage.textContent = `Победа игрока ${gameState.winner}!`;
+            winnerMessage.style.display = 'block';
+
+            // Блокируем игровые клетки
+            blockCells();
+
+            // Завершаем выполнение функции
+            return;
         }
+
+        // Если ход переходит компьютеру
+        if (gameState.currentPlayer === 2) {
+            const nextMove = gameService.getNextMove(gameState);
+            if (nextMove) {
+                cells[nextMove.index] = 2;
+                updateBoard(gameState.board.field);
+
+                // Проверка на победителя
+                if (gameState.winner) {
+                    const winnerMessage = document.getElementById('winner-message');
+                    winnerMessage.textContent = `Победа игрока ${gameState.winner}!`;
+                    winnerMessage.style.display = 'block';
+
+                    // Блокируем игровые клетки
+                    blockCells();
+
+                    return;
+                }
+            }
+        }
+    }
+
+    function blockCells() {
+        const cellsElements = document.querySelectorAll('.cell');
+        cellsElements.forEach(cell => cell.classList.add('disabled'));
+    }
+
+    function updateBoard(field) {
+        field.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+                const index = rowIndex * 3 + colIndex;
+                cells[index] = cell; // Обновляем массив состояния
+                board.children[index].textContent = cell === 1 ? 'X' : (cell === 2 ? 'O' : '');
+            });
+        });
     }
 
     createBoard();
     createGame(); // Создаем новую игру при загрузке страницы
 </script>
+
 </body>
 </html>

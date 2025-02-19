@@ -4,12 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ad46a03-c25c-4941-8679-10198a23d758" name="Changes" comment="v2.1">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/index.html" afterDir="false" />
+    <list default="true" id="9ad46a03-c25c-4941-8679-10198a23d758" name="Changes" comment="v2.3 _ created isValidMove">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/ai.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/human.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/domain/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/domain/service/GameService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/domain/model/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/domain/model/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/domain/service/GameServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/domain/service/GameServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/web/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/web/controller/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/web/mapper/GameMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/web/mapper/GameMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/web/model/GameDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/web/model/GameDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +113,11 @@
     ]
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/static/images" />
+    </key>
+  </component>
   <component name="RunManager" selected="Spring Boot.Main">
     <configuration name="BoardMapperTest.testToDomain" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -210,7 +219,9 @@
       <workItem from="1739613943324" duration="19000" />
       <workItem from="1739771571532" duration="4691000" />
       <workItem from="1739798231030" duration="7894000" />
-      <workItem from="1739860226901" duration="1496000" />
+      <workItem from="1739860226901" duration="2309000" />
+      <workItem from="1739866372334" duration="13029000" />
+      <workItem from="1739942622588" duration="368000" />
     </task>
     <task id="LOCAL-00001" summary="v1.0">
       <option name="closed" value="true" />
@@ -244,7 +255,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739357906533</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="v2.3 _ created isValidMove">
+      <option name="closed" value="true" />
+      <created>1739861863054</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1739861863054</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -278,14 +297,15 @@
     <MESSAGE value="v1.1_basic structure, web layer" />
     <MESSAGE value="v1.2" />
     <MESSAGE value="v2.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="v2.1" />
+    <MESSAGE value="v2.3 _ created isValidMove" />
+    <option name="LAST_COMMIT_MESSAGE" value="v2.3 _ created isValidMove" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/example/web/controller/GameController.java</url>
-          <line>43</line>
+          <line>42</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

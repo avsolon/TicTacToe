@@ -9,6 +9,7 @@ public class GameMapper {
         dto.setId(game.getId());
         dto.setBoard(BoardMapper.toDTO(game.getBoard()));
         dto.setCurrentPlayer(game.getCurrentPlayer());
+        dto.setWinner(game.getWinner());
         return dto;
     }
 
@@ -17,6 +18,7 @@ public class GameMapper {
         game.setId(dto.getId());
         game.setBoard(BoardMapper.toDomain(dto.getBoard()));
         game.setCurrentPlayer(dto.getCurrentPlayer());
+        game.setWinner(dto.getWinner());
         return game;
     }
 }

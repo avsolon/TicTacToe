@@ -6,11 +6,12 @@ public class Game {
     private String id; // UUID игры
     private Board board;
     private int currentPlayer; // 1 - крестик, 2 - нолик
+    private Integer winner;
 
     public Game() {
         this.id = UUID.randomUUID().toString();
         this.board = new Board();
-        this.currentPlayer = 1; // Текущий игрок(начинает игрок 1)
+        this.currentPlayer = 1; // начинает игрок 1 - крестики
     }
 
     public String getId() {
@@ -25,10 +26,6 @@ public class Game {
         return currentPlayer;
     }
 
-    public void switchPlayer() {
-        currentPlayer = (currentPlayer == 1) ? 2 : 1;
-    }
-
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
@@ -39,5 +36,17 @@ public class Game {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Integer winner) {
+        this.winner = winner;
+    }
+
+    public void switchPlayer() {
+        currentPlayer = (currentPlayer == 1) ? 2 : 1;
     }
 }

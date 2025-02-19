@@ -2,7 +2,6 @@ package org.example.web.controller;
 
 import org.example.domain.model.Game;
 import org.example.domain.service.GameService;
-import org.example.domain.service.GameServiceImpl;
 import org.example.web.model.GameDTO;
 import org.example.web.mapper.BoardMapper;
 import org.example.web.mapper.GameMapper;
@@ -39,7 +38,6 @@ public class GameController {
         return ResponseEntity.ok(GameMapper.toDTO(game));
     }
 
-
     @PostMapping("/{id}")
     public ResponseEntity<GameDTO> updateGame(@PathVariable String id, @RequestBody GameDTO gameDTO) {
         Game game = gameService.getGame(id);
@@ -52,6 +50,19 @@ public class GameController {
         System.out.println("Обновление игры с ID: " + id + " с данными: " + gameDTO);
 
         try {
+            //Проверка на победителя
+            if (gameService.isWinner(game, 1)) {
+                System.out.println("Победа игрока 1!");
+                gameDTO.setWinner(1);
+                gameService.saveGame(game);
+                return ResponseEntity.ok(gameDTO); // Завершаем игру и возвращаем результат
+            } else if (gameService.isWinner(game, 2)) {
+                System.out.println("Победа игрока 2!");
+                gameDTO.setWinner(2);
+                gameService.saveGame(game);
+                return ResponseEntity.ok(gameDTO); // Завершаем игру и возвращаем результат
+            }
+
             // Проверка, что текущий игрок соответствует ожидаемому значению
             if (game.getCurrentPlayer() != gameDTO.getCurrentPlayer()) {
                 System.out.println("Неверный игрок");
@@ -67,45 +78,52 @@ public class GameController {
             // Обновление игрового поля
             game.setBoard(BoardMapper.toDomain(gameDTO.getBoard()));
 
-            // Проверка, заполнено ли поле
-            if (gameService.isBoardFull(game)) {
-                System.out.println("Поле заполнено.");
-                return ResponseEntity.ok(GameMapper.toDTO(game));
-            }
-
-            // Переключить игрока
-            game.switchPlayer();
-
-            // Ход компьютера (игрока 2)
-            if (game.getCurrentPlayer() == 2) {
-                int[] nextMove = gameService.getNextMove(game);
-                if (nextMove[0] != -1 && nextMove[1] != -1) {
-                    game.getBoard().setCell(nextMove[0], nextMove[1], 2);
-                    System.out.println("Компьютер сделал ход в ячейку: " + nextMove[0] + ", " + nextMove[1]);
-                    game.switchPlayer();
+                // Проверка, заполнено ли поле
+                if (gameService.isBoardFull(game)) {
+                    System.out.println("Поле заполнено.");
+                    return ResponseEntity.ok(gameDTO);
                 }
-            }
 
-            // Логирование состояния игры перед сохранением
-            System.out.println("Состояние игры перед сохранением: " + game);
+                // Переключение игрока
+                game.switchPlayer();
 
-            // Сохранить обновленное состояние игры
-            gameService.saveGame(game);
+                // Ход компьютера (игрока 2 - нолики)
+                if (game.getCurrentPlayer() == 2) {
+                    int[] nextMove = gameService.getNextMove(game);
+                    if (nextMove[0] != -1 && nextMove[1] != -1) {
+                        game.getBoard().setCell(nextMove[0], nextMove[1], 2);
+                        System.out.println("Компьютер сделал ход в ячейку: " + nextMove[0] + ", " + nextMove[1]);
+                        game.switchPlayer();
+                    }
+                }
 
+            // Проверка на победителя
             if (gameService.isWinner(game, 1)) {
                 System.out.println("Победа игрока 1!");
-            }
-            if (gameService.isWinner(game, 2)) {
+                gameDTO.setWinner(1);
+                gameService.saveGame(game);
+                return ResponseEntity.ok(gameDTO);
+            } else if (gameService.isWinner(game, 2)) {
                 System.out.println("Победа игрока 2!");
+                gameDTO.setWinner(2);
+                gameService.saveGame(game);
+                return ResponseEntity.ok(gameDTO);
             }
 
-            // Проверка, закончилась ли игра
-            if (gameService.isGameOver(game)) {
-                System.out.println("Игра завершена!");
-                return ResponseEntity.ok(GameMapper.toDTO(game));
-            }
+                // Логирование состояния игры перед сохранением
+                System.out.println("Состояние игры перед сохранением: " + game);
 
-            return ResponseEntity.ok(GameMapper.toDTO(game));
+                // Сохранение обновленного состояния
+                gameService.saveGame(game);
+
+                // Проверка на GameOver
+                if (gameService.isGameOver(game)) {
+                    System.out.println("Игра завершена!");
+                    return ResponseEntity.ok(gameDTO);
+                }
+
+                // Возвращаем обновленный объект GameDTO
+                return ResponseEntity.ok(gameDTO);
 
         } catch (IllegalArgumentException e) {
             System.out.println("Ошибка при обновлении игры: " + e.getMessage());

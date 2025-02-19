@@ -18,7 +18,7 @@ public class Board {
             throw new IllegalArgumentException("Некорректные координаты");
         }
         if (player != 0 && player != 1 && player != 2) {
-            throw new IllegalArgumentException("Некорректное значение игрока");
+            throw new IllegalArgumentException("Некорректный игрок");
         }
         field[row][col] = player;
     }
@@ -38,7 +38,3 @@ public class Board {
     }
 }
 
-
-//    public Board(int row, int col){
-//        this.field = new int[3][3];
-//    }
