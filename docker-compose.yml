@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:14
+    container_name: ttt_db
+    restart: always
+    environment:
+      POSTGRES_DB: tictactoe
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  app:
+    build: .
+    container_name: ttt_app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tictactoe
+      SPRING_DATASOURCE_USER: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  db_data:
+
+
+
+
+
+
