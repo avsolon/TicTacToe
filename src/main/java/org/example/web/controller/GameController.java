@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/api/games")
 public class GameController {
@@ -55,12 +54,12 @@ public class GameController {
                 System.out.println("Победа игрока 1!");
                 gameDTO.setWinner(1);
                 gameService.saveGame(game);
-                return ResponseEntity.ok(gameDTO); // Завершаем игру и возвращаем результат
+                return ResponseEntity.ok(gameDTO);
             } else if (gameService.isWinner(game, 2)) {
                 System.out.println("Победа игрока 2!");
                 gameDTO.setWinner(2);
                 gameService.saveGame(game);
-                return ResponseEntity.ok(gameDTO); // Завершаем игру и возвращаем результат
+                return ResponseEntity.ok(gameDTO);
             }
 
             // Проверка, что текущий игрок соответствует ожидаемому значению
@@ -133,7 +132,4 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
-
-
 }
